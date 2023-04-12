@@ -18,52 +18,55 @@
     margin-bottom: 20px;
 }
 .audio-file-input::-webkit-file-upload-button {
-    padding: 10px;
-    background-color: #3f51b5;
-    color: white;
-    border: none;
-    width: 150px;
+    background-color: white;
+    border: 1px solid #ccc;
     border-radius: 10px;
+    color: #333;
+    font-size: 1.25em;
+    font-family: Lato, sans-serif;
+    padding: 10px;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     cursor: pointer;
-    font-size: 20px;
     transition: all 0.2s ease-in-out;
     margin-top: 18%;
 }
 .audio-file-input::-webkit-file-upload-button:hover {
-    background-color: black;
+    background-color: #666;
+    border-color: #666;
+    color: white;
 }
 .audio-file-input::-moz-file-upload-button {
-    padding: 10px;
-    background-color: #3f51b5;
-    color: white;
-    border: none;
-    width: 150px;
+    background-color: white;
+    border: 1px solid #ccc;
     border-radius: 10px;
+    color: #333;
+    font-size: 1.25em;
+    font-family: Lato, sans-serif;
+    padding: 10px;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     cursor: pointer;
-    font-size: 20px;
     transition: all 0.2s ease-in-out;
     margin-top: 18%;
 }
 .audio-file-input::-moz-file-upload-button:hover{
-    background-color: black;
+    background-color: #666;
+    border-color: #666;
+    color: white;
 }
 .record-audio-button {
-    display: block;
-    margin: 10px auto;
-    padding: 10px;
-    background-color: #3f51b5;
-    color: white;
-    border: none;
+    background-color: white;
+    border: 1px solid #ccc;
     border-radius: 10px;
+    color: #333;
+    font-size: 1.5em;
+    font-family: Lato, sans-serif;
+    padding: 10px 20px;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     cursor: pointer;
-    text-align: center;
-    width: 150px;
-    font-size: 20px;
     transition: all 0.2s ease-in-out;
 }
 .record-audio-button:hover {
-    background-color: black;
+    background-color: #666;
+    border-color: #666;
+    color: white;
 }

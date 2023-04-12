@@ -23,16 +23,20 @@ function AnalysisPage() {
         e.preventDefault();
         setIsDragging(false);
         const file = e.dataTransfer.files[0];
-        // handle the dropped file here
+        handleFile(file)
     };
 
-    const handleFileInputChange = (event) => {
-        const file = event.target.files[0];
+    const handleFile = (file) => {
         if (file && (file.type === 'video/mp4' || file.type === 'audio/wav')) {
             setAudioFile(file);
         } else {
             setAudioFile(null);
         }
+    }
+
+    const handleFileInputChange = (event) => {
+        const file = event.target.files[0];
+        handleFile(file);
     };
 
     const handleRecordButtonClick = () => {
@@ -62,19 +66,6 @@ function AnalysisPage() {
                 />
                 <button className="record-audio-button" onClick={handleRecordButtonClick}>Record Audio</button>
             </div>
-            {/*<div className="audio-input-container">*/}
-            {/*    <label htmlFor="audio-file-input" style={{ margin: '45px 0 20px 0', fontSize: '25px' }}>*/}
-            {/*        Upload audio file (MP4 or WAV):*/}
-            {/*    </label>*/}
-            {/*    <input*/}
-            {/*        type="file"*/}
-            {/*        accept="video/mp4, audio/wav"*/}
-            {/*        onChange={handleFileInputChange}*/}
-            {/*        className="audio-file-input"*/}
-            {/*        id="audio-file-input"*/}
-            {/*    />*/}
-            {/*    <button className="record-audio-button" onClick={handleRecordButtonClick}>Record Audio</button>*/}
-            {/*</div>*/}
         </div>
     );
 }
