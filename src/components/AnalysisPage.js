@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 import './AnalysisPage.css'
 
+
+
 function AnalysisPage() {
     const [audioFile, setAudioFile] = useState(null);
     const [isDragging, setIsDragging] = useState(false);
@@ -38,7 +40,9 @@ function AnalysisPage() {
         const file = event.target.files[0];
         handleFile(file);
     };
-
+    const handleStopButtonClick =() =>{
+        //this is a sub function to stop record
+    }
     const handleRecordButtonClick = () => {
         // Handle recording functionality here
     };
@@ -65,6 +69,7 @@ function AnalysisPage() {
                     id="audio-file-input"
                 />
                 <button className="record-audio-button" onClick={handleRecordButtonClick}>Record Audio</button>
+                <button className="stop-audio-button" onClick={handleStopButtonClick}>Stop Audio</button>
             </div>
         </div>
     );
