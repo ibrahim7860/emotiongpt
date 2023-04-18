@@ -68,8 +68,10 @@ function AnalysisPage() {
                     className="audio-file-input"
                     id="audio-file-input"
                 />
-                <button className="record-audio-button" onClick={handleRecordButtonClick}>Record Audio</button>
-                <button className="stop-audio-button" onClick={handleStopButtonClick}>Stop Audio</button>
+                
+                    <button className="record-audio-button" onClick={handleRecordButtonClick}>Record Audio</button>
+                    <button className="stop-audio-button" onClick={handleStopButtonClick}>Stop Audio</button>
+                 
             </div>
         </div>
     );
