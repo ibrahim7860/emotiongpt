@@ -1,34 +1,37 @@
 import React, {useState} from 'react';
 import './AnalysisPage.css'
-
-
+import RecordButton from "./RecordButton";
 
 function AnalysisPage() {
+    const [dragActive, setDragActive] = React.useState(false);
     const [audioFile, setAudioFile] = useState(null);
-    const [isDragging, setIsDragging] = useState(false);
+    const inputRef = React.useRef(null);
 
-    const handleDragOver = (e) => {
+    const handleDrag = function(e) {
         e.preventDefault();
-        setIsDragging(true);
+        e.stopPropagation();
+        if (e.type === "dragenter" || e.type === "dragover") {
+            setDragActive(true);
+        } else if (e.type === "dragleave") {
+            setDragActive(false);
+        }
     };
 
-    const handleDragLeave = () => {
-        setIsDragging(false);
-    };
-
-    const handleDragEnter = (event) => {
-        event.preventDefault();
-        setIsDragging(true);
-    };
-
-    const handleDrop = (e) => {
+    const handleDrop = function(e) {
         e.preventDefault();
-        setIsDragging(false);
+        e.stopPropagation();
+        setDragActive(false);
         const file = e.dataTransfer.files[0];
-        handleFile(file)
+        handleFiles(file)
     };
 
-    const handleFile = (file) => {
+    const handleChange = function(e) {
+        e.preventDefault();
+        const file = e.target.files[0];
+        handleFiles(file);
+    };
+
+    const handleFiles = (file) => {
         if (file && (file.type === 'video/mp4' || file.type === 'audio/wav')) {
             setAudioFile(file);
         } else {
@@ -36,42 +39,32 @@ function AnalysisPage() {
         }
     }
 
-    const handleFileInputChange = (event) => {
-        const file = event.target.files[0];
-        handleFile(file);
+    const onButtonClick = () => {
+        inputRef.current.click();
     };
-    const handleStopButtonClick =() =>{
-        //this is a sub function to stop record
-    }
-    const handleRecordButtonClick = () => {
-        // Handle recording functionality here
+
+    const handleSetAudioFile = (blob) => {
+        const file = new File([blob], 'recorded_audio.wav', { type: 'audio/wav' });
+        setAudioFile(file);
     };
 
     return (
         <div className="container">
-            <div className="audio-input-container">
-                <label htmlFor="audio-file-input" style={{ margin: '45px 0 20px 0', fontSize: '25px' }}>
-                    Upload or drag audio file (MP4 or WAV):
-                </label>
-                <div
-                    className={`choose-file-button${isDragging ? ' dragging' : ''}`}
-                    onDragEnter={handleDragEnter}
-                    onDragLeave={handleDragLeave}
-                    onDragOver={handleDragOver}
-                    onDrop={handleDrop}
-                >
-                </div>
-                <input
-                    type="file"
-                    accept="video/mp4, audio/wav"
-                    onChange={handleFileInputChange}
-                    className="audio-file-input"
-                    id="audio-file-input"
-                />
-                
-                    <button className="record-audio-button" onClick={handleRecordButtonClick}>Record Audio</button>
-                    <button className="stop-audio-button" onClick={handleStopButtonClick}>Stop Audio</button>
-                 
+            <div style={{ display: 'flex', justifyContent: 'center'}}>
+                <form id="form-file-upload" onDragEnter={handleDrag} onSubmit={(e) => e.preventDefault()}>
+                    <input ref={inputRef} type="file" id="input-file-upload" multiple={true} onChange={handleChange} accept="audio/wav, video/mp4"/>
+                    <label id="label-file-upload" htmlFor="input-file-upload" className={dragActive ? "drag-active" : "" }>
+                        <div>
+                            <p style={{fontSize: '35px'}}>Drag and drop your file here or</p>
+                            <button className="upload-button" onClick={onButtonClick}>Upload a file</button>
+                            {audioFile && <div style={{paddingTop: '20px', fontSize: '20px'}}>{audioFile.name}</div>}
+                        </div>
+                    </label>
+                    { dragActive && <div id="drag-file-element" onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}></div> }
+                </form>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '20px'}}>
+                <RecordButton onRecordComplete={handleSetAudioFile}/>
             </div>
         </div>
     );

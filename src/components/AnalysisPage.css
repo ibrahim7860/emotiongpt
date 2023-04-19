@@ -2,71 +2,60 @@
     height: 92vh;
     font-family: Lato, sans-serif;
 }
-.audio-input-container {
+
+#form-file-upload {
+    height: 30rem;
+    width: 60rem;
+    max-width: 100%;
+    text-align: center;
+    margin-top: 10vh;
+}
+
+#input-file-upload {
+    display: none;
+}
+
+#label-file-upload {
+    height: 100%;
     display: flex;
-    flex-direction: column;
     align-items: center;
+    justify-content: center;
+    border-width: 2px;
+    border-radius: 1rem;
+    border-color: #cbd5e1;
+    background-color: #f8fafc;
 }
-.audio-file-input {
-    width: 80%;
-    height: 60vh;
-    padding: 10px;
-    border: 3px solid #808080;
-    border-radius: 10px;
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-    font-size: 1.2em;
-    margin-bottom: 20px;
+
+#label-file-upload.drag-active {
+    background-color: #BEA9DF;
 }
-.audio-file-input::-webkit-file-upload-button {
+
+.upload-button {
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 10px;
     color: #333;
-    font-size: 1.25em;
+    font-size: 1.75em;
     font-family: Lato, sans-serif;
     padding: 10px;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     cursor: pointer;
     transition: all 0.2s ease-in-out;
-    margin-top: 18%;
 }
-.audio-file-input::-webkit-file-upload-button:hover {
+
+.upload-button:hover {
     background-color: #666;
     border-color: #666;
     color: white;
 }
-.audio-file-input::-moz-file-upload-button {
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    color: #333;
-    font-size: 1.25em;
-    font-family: Lato, sans-serif;
-    padding: 10px;
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    margin-top: 18%;
-}
-.audio-file-input::-moz-file-upload-button:hover{
-    background-color: #666;
-    border-color: #666;
-    color: white;
-}
-.record-audio-button {
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    color: #333;
-    font-size: 1.5em;
-    font-family: Lato, sans-serif;
-    padding: 10px 20px;
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-}
-.record-audio-button:hover {
-    background-color: #666;
-    border-color: #666;
-    color: white;
+
+#drag-file-element {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 1rem;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
 }
