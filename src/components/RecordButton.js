@@ -8,6 +8,7 @@ function RecordButton(props) {
     const audioRef = useRef(null);
 
     const startRecording = async () => {
+        setRecordedAudio(false)
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         mediaRecorderRef.current = new MediaRecorder(stream);
         mediaRecorderRef.current.addEventListener('dataavailable', handleDataAvailable);
@@ -29,11 +30,13 @@ function RecordButton(props) {
 
     return (
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-            <button onClick={recording ? stopRecording : startRecording} className="record-button">
-                {recording ? 'Stop Recording' : 'Start Recording'}
-            </button>
-            {recording && <p style={{fontSize: '20px', marginLeft: '10vh'}}>Recording...</p>}
-            {recordedAudio && <audio style={{marginLeft: '10vh'}} controls ref={audioRef} src={recordedAudio} />}
+            <div style={{flexDirection: 'column'}}>
+                <button onClick={recording ? stopRecording : startRecording} className="record-button">
+                    {recording ? 'Stop Recording' : 'Start Recording'}
+                </button>
+                {recording && <p style={{fontSize: '20px', textAlign: 'center'}}>Recording...</p>}
+            </div>
+            {recordedAudio && <audio style={{marginLeft: '15vh'}} controls ref={audioRef} src={recordedAudio} />}
         </div>
     );
 }

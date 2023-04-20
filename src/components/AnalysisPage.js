@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import './AnalysisPage.css'
 import RecordButton from "./RecordButton";
+import {Link} from "react-router-dom";
 
 function AnalysisPage() {
     const [dragActive, setDragActive] = React.useState(false);
@@ -65,6 +66,9 @@ function AnalysisPage() {
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '20px'}}>
                 <RecordButton onRecordComplete={handleSetAudioFile}/>
+            </div>
+            <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                {audioFile && <Link to="/results"><button className="submit-button" style={{marginTop: '15px'}}>Submit Audio</button></Link>}
             </div>
         </div>
     );
