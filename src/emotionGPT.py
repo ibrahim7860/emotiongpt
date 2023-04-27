@@ -21,7 +21,10 @@ from IPython.display import Audio
 import warnings
 # don't need maybe
 from google.colab import drive
-
+# need to install stuff for mia's portion
+from transformers import WhisperProcessor, WhisperForConditionalGeneration
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+import torch
 
 # connect to google drive for now, won't need when proper connect
 drive.mount('/content/gdrive')
@@ -50,6 +53,15 @@ i.e. OAF_Fear, OAF_Pleasant, ..., OAF_neutral, YAF_angry, ..., YAF_sad)
 model = tf.keras.models.load_model('emotionGPT model.h5')
 train_history = np.load('emotionGPT history.npy',allow_pickle='TRUE').item()
 
+
+# mia's portion: speech to text
+# load model and processor
+processor = WhisperProcessor.from_pretrained("openai/whisper-tiny.en")
+s2tmodel = WhisperForConditionalGeneration.from_pretrained("openai/whisper-tiny.en")
+
+# S2T prediction model
+tokenizer = AutoTokenizer.from_pretrained("joeddav/distilbert-base-uncased-go-emotions-student")
+txt_model = AutoModelForSequenceClassification.from_pretrained("joeddav/distilbert-base-uncased-go-emotions-student")
 
 # pretty display functions using nice librosa plots
 def waveplot(data, sr, emotion):
@@ -104,6 +116,31 @@ def get_label(check_mel_spec):
   max_emotion = list(emotions_to_labels.keys())[list(emotions_to_labels.values()).index(max_index)]
   return max_val, max_emotion
 
+'''
+needs wav file & sampling rate
+outputs transcription of speech
+'''
+def transcript(trans_audio, trans_sr = None):
+    input_features = processor(trans_audio, sampling_rate=trans_sr, return_tensors="pt").input_features 
+
+    # generate token ids
+    predicted_ids = s2tmodel.generate(input_features)
+    # decode token ids to text
+    transcription = processor.batch_decode(predicted_ids, skip_special_tokens=False)
+    transcription = processor.batch_decode(predicted_ids, skip_special_tokens=True)
+    
+    return transcription
+
+def text_label(text):
+  tok = tokenizer(text, return_tensors="pt")
+  with torch.no_grad(): logits = txt_model(**tok)["logits"]
+  choosen_emotions = ["anger", "disgust", "fear", "sadness", "surprise", "neutral", "joy"]
+  choosen_emotions_ids = list(map(txt_model.config.label2id.get, choosen_emotions)); choosen_emotions_ids
+  filtered_logits = logits[:, choosen_emotions_ids]; filtered_logits
+  probs = torch.softmax(filtered_logits, dim=-1)
+  classification = {choosen_emotions[i]: probs[0, i].item() for i in range(probs.size(-1))}
+  pred = choosen_emotions[int(torch.argmax(probs).item())]
+  return pred, classification
 
 # how output & stuff works
 # test is wav file path
@@ -113,6 +150,11 @@ test_audio, test_sr = librosa.load(test, sr=None, mono=True)
 # need both below functions
 test_mel_spec = resize_extract(test_audio, test_sr)
 probability, emotion_label = get_label(test_mel_spec)
-# output
+# mia's s2t prediction (obviously the dataset doesn't really do anything for this)
+test_text = transcript(test_audio)
+test_text_label, test_text_class = text_label(test_text)
+# output for s2t
 print(f"The largest number is: {probability}")
 print(f"Corresponding emotion is '{emotion_label}'")
+print(f"The s2t largest probability: {test_text_class[test_text_label]}")
+print(f"Corresponding s2t emotion is: '{test_text_label}'")
