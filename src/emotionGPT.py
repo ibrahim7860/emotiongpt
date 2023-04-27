@@ -50,8 +50,6 @@ i.e. OAF_Fear, OAF_Pleasant, ..., OAF_neutral, YAF_angry, ..., YAF_sad)
 model = tf.keras.models.load_model('emotionGPT model.h5')
 train_history = np.load('emotionGPT history.npy',allow_pickle='TRUE').item()
 
-#
-
 
 # pretty display functions using nice librosa plots
 def waveplot(data, sr, emotion):
@@ -78,11 +76,14 @@ def plot_model(train_history):
     plt.legend(['Train', 'Test'], loc='upper left')
     plt.show()
     
-# extract the feature of an audio file & resize it for the model
-def resize_extract(audio_wav):
-  new_check_audio, new_check_sr = librosa.load(audio_wav, sr=None, mono=True)
+'''
+takes in wav file & sampling rate
+extracts spectrogram features
+outputs resized information
+'''
+def resize_extract(check_audio, check_sr = None):
   # Extract Mel spectrogram features
-  check_mel_spec = librosa.feature.melspectrogram(y=new_check_audio, sr=new_check_sr, n_fft=2048, hop_length=512, n_mels=128)
+  check_mel_spec = librosa.feature.melspectrogram(y=check_audio, sr=check_sr, n_fft=2048, hop_length=512, n_mels=128)
   check_mel_spec = librosa.power_to_db(check_mel_spec, ref=np.max)
   # Resize to 128x128
   check_mel_spec.resize((128,128), refcheck=False)
@@ -91,7 +92,9 @@ def resize_extract(audio_wav):
   return check_mel_spec
 
 
-# gets label from spectrogram input
+'''
+takes spectrogram feature & output label information
+'''
 def get_label(check_mel_spec):
   result = model.predict(check_mel_spec)
   prob_arr = np.array(result)
@@ -103,8 +106,13 @@ def get_label(check_mel_spec):
 
 
 # how output & stuff works
-test = df['speech'][1200]
-test_mel_spec = resize_extract(test)
+# test is wav file path
+test = df['speech'][1200]   
+# test_audio is a wav file, test_sr is the sampling rate (you can ignore this)
+test_audio, test_sr = librosa.load(test, sr=None, mono=True)
+# need both below functions
+test_mel_spec = resize_extract(test_audio, test_sr)
 probability, emotion_label = get_label(test_mel_spec)
+# output
 print(f"The largest number is: {probability}")
 print(f"Corresponding emotion is '{emotion_label}'")
