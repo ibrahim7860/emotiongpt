@@ -114,13 +114,15 @@ def get_label(check_mel_spec):
   max_val = np.max(prob_arr)
   max_index = np.argmax(prob_arr)
   max_emotion = list(emotions_to_labels.keys())[list(emotions_to_labels.values()).index(max_index)]
+  if(max_emotion == 'pleasant'):
+    max_emotion = 'pleasant surprise'
   return max_val, max_emotion
 
 '''
 needs wav file & sampling rate
 outputs transcription of speech
 '''
-def transcript(trans_audio, trans_sr = None):
+def transcript(trans_audio, trans_sr = 16000):
     input_features = processor(trans_audio, sampling_rate=trans_sr, return_tensors="pt").input_features 
 
     # generate token ids
@@ -134,7 +136,7 @@ def transcript(trans_audio, trans_sr = None):
 def text_label(text):
   tok = tokenizer(text, return_tensors="pt")
   with torch.no_grad(): logits = txt_model(**tok)["logits"]
-  choosen_emotions = ["anger", "disgust", "fear", "sadness", "surprise", "neutral", "joy"]
+  choosen_emotions = ["angry", "disgust", "fear", "happy", "neutral", "sad", "pleasant surprise"]
   choosen_emotions_ids = list(map(txt_model.config.label2id.get, choosen_emotions)); choosen_emotions_ids
   filtered_logits = logits[:, choosen_emotions_ids]; filtered_logits
   probs = torch.softmax(filtered_logits, dim=-1)
@@ -152,9 +154,7 @@ test_mel_spec = resize_extract(test_audio, test_sr)
 probability, emotion_label = get_label(test_mel_spec)
 # mia's s2t prediction (obviously the dataset doesn't really do anything for this)
 test_text = transcript(test_audio)
-test_text_label, test_text_class = text_label(test_text)
 # output for s2t
+print(f"Your speech was identified as: '{test_text}'")
 print(f"The largest number is: {probability}")
 print(f"Corresponding emotion is '{emotion_label}'")
-print(f"The s2t largest probability: {test_text_class[test_text_label]}")
-print(f"Corresponding s2t emotion is: '{test_text_label}'")
