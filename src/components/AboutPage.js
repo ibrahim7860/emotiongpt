@@ -25,6 +25,13 @@ function AboutPage() {
                 Future – Help Artificial Intelligent learning emotion from human and may be set up the emotion for AI.<br/>
                 </p>
                 <h2>Team Members: </h2>
+                <p>
+                   Atmin Sheth <br/>
+                   HaoChen Guo <br/>
+                   Thao My Tran <br/>
+                   Daniel Jones <br/>
+                   Ibrahim Ahmed <br/>
+                </p>
             </div>
         </div>
     );
