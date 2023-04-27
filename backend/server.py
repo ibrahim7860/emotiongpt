@@ -1,8 +1,9 @@
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, jsonify
 from keras.models import load_model
 import librosa
 import numpy as np
 import tensorflow as tf
+
 
 app = Flask(__name__, template_folder='templates')
 
@@ -29,10 +30,15 @@ def get_label(check_mel_spec):
     max_index = np.argmax(prob_arr)
     max_emotion = list(emotions_to_labels.keys())[list(emotions_to_labels.values()).index(max_index)]
     return max_val, max_emotion
+@app.route('/')
+def index():
+    return 'Hello, World!'
 
-@app.route('/analyze-audio', methods=['POST'])
+@app.route('/analysis', methods=['POST'])
 def analyze_audio():
     audio_file = request.files['audio']
+    audio_file.save(audio_file.filename)
+
     if audio_file:
         # Preprocess the uploaded file
         check_mel_spec = resize_extract(audio_file.filename)
