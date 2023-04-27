@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import './AnalysisPage.css'
 import RecordButton from "./RecordButton";
+import axios from 'axios';
 import {Link} from "react-router-dom";
 
 function AnalysisPage() {
@@ -17,6 +18,26 @@ function AnalysisPage() {
             setDragActive(false);
         }
     };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        const formData = new FormData();
+        formData.append('audio', audioFile);
+
+        axios.post('/analyze-audio', formData)
+            .then((res) => {
+                if (res.data.error) {
+                    // Handle error
+                } else {
+                    const emotion = res.data.emotion;
+                    window.location.href = `/results?emotion=${emotion}`;
+                }
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+    }
 
     const handleDrop = function(e) {
         e.preventDefault();
@@ -68,7 +89,7 @@ function AnalysisPage() {
                 <RecordButton onRecordComplete={handleSetAudioFile}/>
             </div>
             <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                {audioFile && <Link to="/results"><button className="submit-button" style={{marginTop: '15px'}}>Submit Audio</button></Link>}
+                {audioFile && <button className="submit-button" type="submit" style={{marginTop: '15px'}} onClick={handleSubmit}>Submit Audio</button>}
             </div>
         </div>
     );
