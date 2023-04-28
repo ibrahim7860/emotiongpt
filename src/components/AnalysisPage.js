@@ -25,10 +25,10 @@ function AnalysisPage() {
         const formData = new FormData();
         formData.append('audio', audioFile);
 
-        axios.post('/analyze-audio', formData)
+        axios.post('/analysis', formData)
             .then((res) => {
                 if (res.data.error) {
-                    // Handle error
+                    console.log("error in server response")
                 } else {
                     const emotion = res.data.emotion;
                     window.location.href = `/results?emotion=${emotion}`;
