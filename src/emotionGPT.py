@@ -136,7 +136,7 @@ def transcript(trans_audio, trans_sr = 16000):
 def text_label(text):
   tok = tokenizer(text, return_tensors="pt")
   with torch.no_grad(): logits = txt_model(**tok)["logits"]
-  choosen_emotions = ["angry", "disgust", "fear", "happy", "neutral", "sad", "pleasant surprise"]
+  choosen_emotions = ["anger", "disgust", "fear", "sadness", "surprise", "neutral", "joy"]
   choosen_emotions_ids = list(map(txt_model.config.label2id.get, choosen_emotions)); choosen_emotions_ids
   filtered_logits = logits[:, choosen_emotions_ids]; filtered_logits
   probs = torch.softmax(filtered_logits, dim=-1)
