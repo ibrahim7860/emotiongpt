@@ -20,28 +20,25 @@ from sklearn.model_selection import train_test_split
 from IPython.display import Audio
 import warnings
 # don't need maybe
-from google.colab import drive
+#from google.colab import drive
 # need to install stuff for mia's portion
 from transformers import WhisperProcessor, WhisperForConditionalGeneration
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
 
 # connect to google drive for now, won't need when proper connect
-drive.mount('/content/gdrive')
+#drive.mount('/content/gdrive')
 
 
 # setup directory
-path = "/content/gdrive/MyDrive/Kaggle"
+#path = "/content/gdrive/MyDrive/Kaggle"
 
-os.environ['KAGGLE_CONFIG_DIR'] = path
-os.chdir(path)
+#os.environ['KAGGLE_CONFIG_DIR'] = path
+#os.chdir(path)
 
 # basic setup
 emotions_to_labels = {'angry':0, 'disgust':1, 'fear':2, 'happy':3, 'neutral':4, 'sad':5, 'pleasant':6}
 labels_to_emot = {v: k for k, v in emotions_to_labels.items()}  # wanted bidirectional mapping, this was an easy thing to do
-spects_feature_np = np.load("Spectrogram Features.npy")
-data_labels_np = np.load("Data Labels.npy")
-df = pd.read_pickle('Dataframe.csv')
 
 ''' 
 df: btw there is 14 subfolders for this dataset each with 200 entries.
@@ -144,9 +141,18 @@ def text_label(text):
   pred = choosen_emotions[int(torch.argmax(probs).item())]
   return pred, classification
 
+
+def compare_emotion(text,spec,text_acc,spec_acc):
+   if text == spec :
+      return spec
+   if text_acc >spec_acc:
+      return text 
+   else:
+     return spec
+   
 # how output & stuff works
 # test is wav file path
-test = df['speech'][1200]   
+test = 'angry.wav'   
 # test_audio is a wav file, test_sr is the sampling rate (you can ignore this)
 test_audio, test_sr = librosa.load(test, sr=None, mono=True)
 # need both below functions
@@ -161,3 +167,5 @@ print(f"The largest number is: {probability}")
 print(f"Corresponding emotion is '{emotion_label}'")
 print(f"Mia prediction: '{test_text_label}'")
 print(f"Mia prediction probability: '{test_text_class[test_text_label]}'")
+result = compare_emotion(test_text_label,emotion_label,test_text_class[test_text_label], probability)
+print(f"the emotion is : '{result}'" )
