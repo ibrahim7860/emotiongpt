@@ -32,7 +32,7 @@ def get_label(check_mel_spec):
     return max_val, max_emotion
 @app.route('/')
 def index():
-    return 'Hello, World!'
+    return 'Initialized EmotionGPT!'
 
 @app.route('/analysis', methods=['POST'])
 def analyze_audio():
